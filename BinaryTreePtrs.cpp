@@ -6,6 +6,7 @@
  */
 #include <cstdlib>
 #include <cstdio>
+#include <queue>
 using namespace std;
 
 struct node{
@@ -111,7 +112,58 @@ node* search(node* root, int key){
 		return search(root->rightChild,key);
 
 }
+//print level wise
+void printBreadthFirstTraverse(node* root){
+	queue<node*> queueNodes;
 
+	node* temp = root;
+	while(temp != NULL){
+		printf("\n %d",temp->data);
+		if(temp->leftChild != NULL)
+			queueNodes.push(temp->leftChild);
+		if(temp->rightChild != NULL)
+			queueNodes.push(temp->rightChild);
+
+		temp = queueNodes.front();
+		queueNodes.pop();
+	}
+}
+
+//maximum depth of the tree
+int maxDepth(node* root){
+	if(root == NULL)
+		return 0;
+
+	int lHeight,rHeight;
+
+	lHeight = maxDepth(root->leftChild);
+	rHeight = maxDepth(root->rightChild);
+
+	if(lHeight > rHeight)
+		return (lHeight + 1);
+	else
+		return (rHeight + 1);
+
+}
+
+void cleanUp(node* root){
+	queue<node*> queueNodes;
+
+	node* temp = root;
+	while(temp != NULL){
+		printf("\n %d",temp->data);
+		if(temp->leftChild != NULL)
+			queueNodes.push(temp->leftChild);
+		if(temp->rightChild != NULL)
+			queueNodes.push(temp->rightChild);
+	}
+	while(queueNodes.empty() == false){
+		node* temp = queueNodes.front();
+		queueNodes.pop();
+		delete temp;
+		temp =  NULL;
+	}
+}
 //driver function
 int main(){
 	node* root = createNode(8);
@@ -124,14 +176,18 @@ int main(){
 	insert(root,3);
 	insert(root,4);
 	insert(root,1);
+	insert(root,9);
+	//inOrder(root);
+	//root = deletion(root,3);
+	//inOrder(root);
 
-	inOrder(root);
-	root = deletion(root,3);
-	inOrder(root);
-
-	node *found = search(root,13);
-	printf("\n Key, LeftChild %d %d ",found->data, found->leftChild->data);
+	//node *found = search(root,13);
+	//printf("\n Key, LeftChild %d %d ",found->data, found->leftChild->data);
+	printBreadthFirstTraverse(root);
+	printf("\n Height of the Tree %d", maxDepth(root));
 	//preOrder(root);
 	//postOrder(root);
+
 	return 0;
 }
+
